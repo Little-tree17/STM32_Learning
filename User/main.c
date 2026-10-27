@@ -1,0 +1,24 @@
+#include "stm32f10x.h"
+
+void Delay(uint32_t count) {
+    for(; count != 0; count--);
+}
+
+int main(void) {
+    // 1. 开启 GPIOC 时钟
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+    
+    // 2. 配置 PC13 为推挽输出
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    
+    while(1) {
+        GPIO_ResetBits(GPIOC, GPIO_Pin_13); // 亮
+        Delay(500000);
+        GPIO_SetBits(GPIOC, GPIO_Pin_13);   // 灭
+        Delay(500000);
+    }
+}
